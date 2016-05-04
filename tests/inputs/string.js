@@ -43,7 +43,7 @@ describe('Check string validation', () => {
     done();
   });
 
-  it('Should use regular expressions as strings', (done) => {
+  it('Should use string for pattern matching', (done) => {
     let validator = Validator.get('string', {
       pattern: '^foo$'
     });
@@ -58,6 +58,24 @@ describe('Check string validation', () => {
       validator.validate('fooo');
     }).throw(Error);
 
+    done();
+  });
+
+  it('Should use function for pattern matching', (done) => {
+    let validator = Validator.get('string', {
+      pattern: function(val) {
+        if (val === 'foo') {
+          return true;
+        }
+
+        return false;
+      }
+    });
+
+    expect(validator.validate('foo')).to.be(true);
+    should(() => {
+      validator.validate('bar');
+    }).throw(Error);
     done();
   });
 });

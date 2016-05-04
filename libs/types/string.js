@@ -8,12 +8,16 @@ export default class TypeString extends TypeValidator {
     pattern: null
   }
 
-  getRegExp(regexp) {
-    if (regexp instanceof RegExp) {
-      return regexp;
+  getPattern(pattern) {
+    if (pattern instanceof RegExp) {
+      return pattern;
     }
 
-    return new RegExp(regexp);
+    if (typeof pattern === 'function') {
+      return pattern;
+    }
+
+    return new RegExp(pattern);
   }
 
   validate(val) {
@@ -30,10 +34,14 @@ export default class TypeString extends TypeValidator {
     }
 
     if (this.options.pattern) {
-      let r = this.getRegExp(this.options.pattern);
+      let r = this.getPattern(this.options.pattern);
 
-      if (!r.test(val)) {
-        throw new Error('Failed regular expression check');
+      if (typeof r === 'function') {
+        if (!r(val)) {
+          throw new Error('Failed pattern callback match');
+        }
+      } else if (!r.test(val)) {
+        throw new Error('Failed pattern match');
       }
     }
 
