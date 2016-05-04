@@ -6,13 +6,6 @@
   "env": {
     "entry": [
       "babel-polyfill"
-    ],
-    "test": {
-      "optional": [
-        "runtime",
-        "es7.classProperties",
-        "es7.classProperties"
-      ]
-    }
+    ]
   }
 }
