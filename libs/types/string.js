@@ -5,7 +5,7 @@ export default class TypeString extends TypeValidator {
   static defaults = {
     minLength: 0,
     maxLength: Infinity,
-    regexp: null
+    pattern: null
   }
 
   getRegExp(regexp) {
@@ -29,8 +29,8 @@ export default class TypeString extends TypeValidator {
       throw new Error('String too long');
     }
 
-    if (this.options.regexp) {
-      let r = this.getRegExp(this.options.regexp);
+    if (this.options.pattern) {
+      let r = this.getRegExp(this.options.pattern);
 
       if (!r.test(val)) {
         throw new Error('Failed regular expression check');

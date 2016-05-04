@@ -45,7 +45,7 @@ describe('Check string validation', () => {
 
   it('Should use regular expressions as strings', (done) => {
     let validator = Validator.get('string', {
-      regexp: '^foo$'
+      pattern: '^foo$'
     });
 
     expect(validator.validate('foo')).to.be(true);
