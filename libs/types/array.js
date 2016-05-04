@@ -5,7 +5,8 @@ export default class TypeArray extends TypeValidator {
   static defaults = {
     minLength: 0,
     maxLength: Infinity,
-    length: null
+    length: null,
+    children: null
   }
 
   constructor(opts = {}) {
