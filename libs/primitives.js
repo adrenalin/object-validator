@@ -10,6 +10,17 @@ exports.isBoolean = function isBoolean(val) {
   return (typeof val === 'boolean');
 };
 
+exports.isInteger = function(val) {
+  if (!exports.isNumber(val)) {
+    return false;
+  }
+
+  if (Number(val) % 1 !== 0) {
+    return false;
+  }
+  return true;
+};
+
 exports.isNumeric = function isNumeric(val) {
   if (exports.isArray(val)) {
     return false;
@@ -46,6 +57,10 @@ exports.isArray = function isArray(val) {
 };
 
 exports.isObject = function isObject(val, strict = true) {
+  if (!val) {
+    return false;
+  }
+  
   if (typeof val !== 'object') {
     return false;
   }

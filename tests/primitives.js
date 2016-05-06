@@ -60,6 +60,7 @@ describe('Check type', () => {
 
   it('Should detect an object', (done) => {
     let validator = new Validator();
+    expect(validator.isObject(undefined)).to.be(false);
     expect(validator.isObject(types.array)).to.be(false);
     expect(validator.isObject(types.string)).to.be(false);
     expect(validator.isObject(types.number)).to.be(false);
@@ -85,6 +86,22 @@ describe('Check type', () => {
     expect(validator.isNumeric(types.object)).to.be(false);
     expect(validator.isNumeric(types.classObject)).to.be(false);
     expect(validator.isNumeric(types.classInitialized)).to.be(false);
+    done();
+  });
+
+  it('Should detect an integer', (done) => {
+    let validator = new Validator();
+    expect(validator.isInteger(types.array)).to.be(false);
+    expect(validator.isInteger(types.string)).to.be(false);
+    expect(validator.isInteger(types.integer)).to.be(true);
+    expect(validator.isInteger(types.number)).to.be(false);
+    expect(validator.isInteger(Infinity)).to.be(false);
+    expect(validator.isInteger(Math.PI)).to.be(false);
+    expect(validator.isInteger(types.numberAsString)).to.be(false);
+    expect(validator.isInteger(types.boolean)).to.be(false);
+    expect(validator.isInteger(types.object)).to.be(false);
+    expect(validator.isInteger(types.classObject)).to.be(false);
+    expect(validator.isInteger(types.classInitialized)).to.be(false);
     done();
   });
 });
