@@ -1,8 +1,6 @@
 import Validator from './validator';
 import { isObject, isArray } from './primitives';
 
-let validator = new Validator();
-
 export default class Schema {
   constructor(structure = {}, path = []) {
     structure = structure || {};
@@ -33,7 +31,7 @@ export default class Schema {
           }
 
           try {
-            let t = validator.getType(structure[k][i]);
+            let t = Validator.getType(structure[k][i]);
             return true;
           } catch (err) {
             // Do nothing
@@ -121,7 +119,7 @@ export default class Schema {
         throw new Error(`Unexpected error: type is not determinable for the key "${k}"`);
       }
 
-      structure[k].type = validator.getType(structure[k].type);
+      structure[k].type = Validator.getType(structure[k].type);
 
       if (!structure[k].type) {
         throw new Error(`Invalid schema type for key "${this.path.join('.')}${k}"`);
