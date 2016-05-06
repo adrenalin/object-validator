@@ -1,10 +1,11 @@
 import TypeValidator from './validator';
-import { isString } from '../primitives';
+import { isInteger, isString } from '../primitives';
 
 export default class TypeString extends TypeValidator {
   static defaults = {
     minLength: 0,
     maxLength: Infinity,
+    length: null,
     pattern: null
   }
 
@@ -23,6 +24,10 @@ export default class TypeString extends TypeValidator {
   validate(val) {
     if (!isString(val)) {
       throw new Error('Not a string');
+    }
+
+    if (isInteger(this.options.length) && this.options.length !== val.length) {
+      throw new Error('String length mismatch');
     }
 
     if (this.options.minLength > val.length) {

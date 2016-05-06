@@ -24,7 +24,22 @@ describe('Check string validation', () => {
     done();
   });
 
-  it('Should min and max lengths', (done) => {
+  it('Should respect explicit length', (done) => {
+    let validator = Validator.get('string', {
+      length: 5
+    });
+
+    expect(validator.validate('12345')).to.be(true);
+    should(() => {
+      validator.validate('1234');
+    }).throw(Error);
+    should(() => {
+      validator.validate('123456');
+    }).throw(Error);
+    done();
+  });
+
+  it('Should respect min and max lengths', (done) => {
     let validator = Validator.get('string', {
       minLength: 1,
       maxLength: 3
