@@ -30,6 +30,10 @@ export default class Validator {
     }
   }
 
+  get(t, field = {}) {
+    return Validator.get(t, field);
+  }
+
   static get(t, field = {}) {
     return new Validator[t](field);
   }
