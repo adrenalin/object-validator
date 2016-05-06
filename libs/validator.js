@@ -12,8 +12,6 @@ import TypeString from './types/string';
 
 import Schema from './schema';
 
-let debug = require('debug')('Validator');
-
 export default class Validator {
   static array = TypeArray;
   static boolean = TypeBoolean;
