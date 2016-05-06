@@ -1,8 +1,8 @@
-import Validator from '../libs/validator';
-import Schema from '../libs/schema';
+import Validator from '../../libs/validator';
+import Schema from '../../libs/schema';
 
-import { types, fieldTypes } from './data';
-import { isObject } from '../libs/primitives';
+import { types, fieldTypes } from '../data';
+import { isObject } from '../../libs/primitives';
 
 import should from 'should';
 import expect from 'expect.js';
@@ -11,51 +11,6 @@ describe('Check schema validation', () => {
   it('Should verify if input is schema or not', (done) => {
     let schema = new Schema();
     expect(Schema.isSchema(schema)).to.be(true);
-    done();
-  });
-
-  it('Should determine if a schema field has children or not', (done) => {
-    expect(Schema.hasChildren({
-      foo: String
-    })).to.be(false);
-
-    expect(Schema.hasChildren({
-      foo: {
-        type: String
-      }
-    })).to.be(false);
-
-    expect(Schema.hasChildren({
-      foo: {
-        type: String,
-        other: []
-      }
-    })).to.be(true);
-
-    expect(Schema.hasChildren({
-      foo: {
-        type: String,
-        other: {}
-      }
-    })).to.be(true);
-
-    // Multiple types in one object, key "type" cannot be the field type
-    expect(Schema.hasChildren({
-      foo: {
-        type: String,
-        value: String
-      }
-    })).to.be(true);
-
-    expect(Schema.hasChildren({
-      foo: {
-        bar: String
-      }
-    })).to.be(true);
-
-    expect(Schema.hasChildren({
-      foo: [String]
-    })).to.be(true);
     done();
   });
 
