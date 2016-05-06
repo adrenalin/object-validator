@@ -7,6 +7,7 @@ export default class Schema {
 
     this.setSchema(structure);
     this.path = path;
+    this.errors = {};
   }
 
   static hasChildren(structure) {
@@ -22,6 +23,8 @@ export default class Schema {
         }
 
         if (this.hasChildren(structure[k])) {
+          structure.children = true;
+          structure.type = 'object';
           return true;
         }
 
@@ -53,6 +56,10 @@ export default class Schema {
   }
 
   static isSchema(val) {
+    if (!val) {
+      return false;
+    }
+
     if (val instanceof Schema) {
       return true;
     }
@@ -62,6 +69,68 @@ export default class Schema {
 
   isSchema(val) {
     return Schema.isSchema(val);
+  }
+
+  validate(input, errors = null) {
+    this.errors = isObject(errors) ? errors : this.errors;
+
+    if (!isObject(this.structure)) {
+      throw new Error('No schema set');
+    }
+
+    return this.validateObject(this.structure, input);
+  }
+
+  validateObject(obj, input, path = []) {
+    let keys = Object.keys(obj);
+    let valid = true;
+
+    for (let i in keys) {
+      let key = keys[i];
+      let value = input[key] || undefined;
+      let p = path.slice(0).concat(key);
+
+      if (this.hasChildren(obj[key])) {
+        valid = this.validateObject(obj[key], value, p);
+      } else {
+        valid = this.validateField(obj[key], value, p);
+      }
+    }
+
+    return valid;
+  }
+
+  isset(value) {
+    return !(value === null || value === undefined);
+  }
+
+  validateField(field, value, path) {
+    if (!this.isset(value) && !field.required) {
+      return true;
+    }
+
+    let pathName = path.join('.');
+    let t = field.type;
+
+    if (!t) {
+      throw new Error(`Could not determine the field type for path "${pathName}"`);
+    }
+
+    if (!value && field.required) {
+      this.errors[pathName] = 'Required value missing';
+      return false;
+    }
+
+    let validator = new Validator[t](field);
+
+    try {
+      validator.validate(value);
+    } catch (err) {
+      this.errors[pathName] = err.message;
+      return false;
+    }
+
+    return true;
   }
 
   validateSchema(structure) {
