@@ -11,6 +11,10 @@ export default class TypeObject extends TypeValidator {
   }
 
   matchType(t) {
+    return TypeObject.matchType(t);
+  }
+
+  static matchType(t) {
     if (t === 'object' || t === 'Object' || t === Object) {
       return true;
     }

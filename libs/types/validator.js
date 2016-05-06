@@ -12,4 +12,8 @@ export default class TypeValidator {
   matchType(t) {
     throw new Error(`${this.constructor.name} uses the default matchType`);
   }
+
+  static matchType(t) {
+    throw new Error(`${this.constructor.name} uses the default matchType`);
+  }
 }

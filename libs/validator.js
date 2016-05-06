@@ -4,6 +4,7 @@ import primitives from './primitives';
 
 import TypeArray from './types/array';
 import TypeBoolean from './types/boolean';
+import TypeEmail from './types/email';
 import TypeInteger from './types/integer';
 import TypeNumber from './types/number';
 import TypeObject from './types/object';
@@ -14,23 +15,13 @@ let debug = require('debug')('Validator');
 export default class Validator {
   static array = TypeArray;
   static boolean = TypeBoolean;
+  static email = TypeEmail;
   static number = TypeNumber;
   static integer = TypeInteger;
   static object = TypeObject;
   static string = TypeString;
 
   constructor() {
-    debug('Validator');
-
-    this.validators = {
-      array: new Validator.array(),
-      boolean: new Validator.boolean(),
-      number: new Validator.number(),
-      integer: new Validator.integer(),
-      object: new Validator.object(),
-      string: new Validator.string()
-    };
-
     // Add primitives to the validator
     for (let i in primitives) {
       this[i] = primitives[i];
@@ -41,14 +32,20 @@ export default class Validator {
     return new Validator[t](field);
   }
 
-  validate(field, value) {
+  validate(schema, input) {
 
   }
 
   getType(t) {
-    for (let i in this.validators) {
-      if (this.validators[i].matchType(t)) {
-        return i;
+    let types = Object.keys(Validator);
+    for (let i in types) {
+      let v = types[i];
+      if (typeof Validator[v].matchType !== 'function') {
+        continue;
+      }
+
+      if (Validator[v].matchType(t)) {
+        return v;
       }
     }
 

@@ -4,7 +4,20 @@ Object validator for JSON input
 
 There are two main parts: Schema and Validator.
 
-Schema example:
+## Schema
+
+Schema can be created with constructor
+
+    let schema = new Schema(definitions);
+
+or by setting the schema
+
+    let schema = new Schema();
+    schema.setSchema(definitions);
+
+
+
+### Schema example:
 
     let phone = new Schema({
       country: 'Int',

@@ -9,7 +9,12 @@ export default class TypeBoolean extends TypeValidator {
 
     return true;
   }
+
   matchType(t) {
+    return TypeBoolean.matchType(t);
+  }
+
+  static matchType(t) {
     if (t === 'bool' || t === 'Bool' || t === 'boolean' || t === 'Boolean' || t === Boolean) {
       return true;
     }

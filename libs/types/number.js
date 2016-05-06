@@ -39,6 +39,10 @@ export default class TypeNumber extends TypeValidator {
   }
 
   matchType(t) {
+    return TypeNumber.matchType(t);
+  }
+
+  static matchType(t) {
     if (t === 'number' || t === 'Number' || t === Number) {
       return true;
     }

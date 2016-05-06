@@ -1,20 +1,13 @@
-import Validator from '../../libs/validator';
-import Schema from '../../libs/schema';
+import Validator from '../libs/validator';
+import Schema from '../libs/schema';
 
-import { types } from '../data';
-import { isObject } from '../../libs/primitives';
+import { types, fieldTypes } from './data';
+import { isObject } from '../libs/primitives';
 
 import should from 'should';
 import expect from 'expect.js';
 
 describe('Check schema validation', () => {
-  let fieldTypes = {
-    string: String,
-    number: Number,
-    boolean: Boolean,
-    array: Array
-  };
-
   it('Should verify if input is schema or not', (done) => {
     let schema = new Schema();
     expect(Schema.isSchema(schema)).to.be(true);

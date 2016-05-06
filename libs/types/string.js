@@ -49,6 +49,10 @@ export default class TypeString extends TypeValidator {
   }
 
   matchType(t) {
+    return TypeString.matchType(t);
+  }
+
+  static matchType(t) {
     if (t === 'str' || t === 'Str' || t === 'string' || t === 'String' || t === String) {
       return true;
     }

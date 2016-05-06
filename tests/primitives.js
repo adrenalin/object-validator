@@ -1,22 +1,11 @@
 import Validator from '../libs/validator';
 
+import { types } from './data';
+
 import should from 'should';
 import expect from 'expect.js';
 
 describe('Check type', () => {
-  let types = {
-    array: [],
-    string: 'foo',
-    number: 1.1,
-    numberAsString: '1.1',
-    integer: 1,
-    float: 1.1,
-    boolean: true,
-    classObject: Validator,
-    classInitialized: new Validator(),
-    object: {}
-  };
-
   it('Should detect a boolean', (done) => {
     let validator = new Validator();
     expect(validator.isBoolean(types.array)).to.be(false);

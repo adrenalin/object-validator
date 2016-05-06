@@ -26,6 +26,10 @@ export default class TypeArray extends TypeValidator {
   }
 
   matchType(t) {
+    return TypeArray.matchType(t);
+  }
+
+  static matchType(t) {
     if (t === 'array' || t === 'Array' || t === Array) {
       return true;
     }

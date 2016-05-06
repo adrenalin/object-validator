@@ -10,6 +10,10 @@ export default class TypeInteger extends TypeNumber {
   }
 
   matchType(t) {
+    return TypeInteger.matchType(t);
+  }
+
+  static matchType(t) {
     if (t === 'integer' || t === 'Integer' || t === 'int' || t === 'Int') {
       return true;
     }
