@@ -23,11 +23,28 @@ export default class Validator {
   static object = TypeObject;
   static string = TypeString;
 
-  constructor() {
+  constructor(schema = null) {
     // Add primitives to the validator
     for (let i in primitives) {
       this[i] = primitives[i];
     }
+
+    if (schema) {
+      this.setSchema(schema);
+    }
+  }
+
+  setSchema(schema) {
+    if (schema instanceof Schema) {
+      this.schema = schema;
+      return this;
+    }
+
+    if (!this.isObject(schema)) {
+      throw new Error('Invalid schema type');
+    }
+
+    this.schema = new Schema(schema);
   }
 
   get(t, field = {}) {
@@ -38,12 +55,14 @@ export default class Validator {
     return new Validator[t](field);
   }
 
-  validate(schema, input) {
-    if (schema instanceof Schema) {
-      this.schema = schema;
-    } else {
-      this.schema = new Schema(schema);
+  validate(input) {
+    this.errors = {};
+    this.schema.validate(input, this.errors);
+
+    if (this.errors.length) {
+      throw new Error('Failed to validate input');
     }
+    return true;
   }
 
   /**
