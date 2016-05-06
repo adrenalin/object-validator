@@ -7,5 +7,10 @@ import should from 'should';
 import expect from 'expect.js';
 
 describe('Check email validation', () => {
-  it('Should return "email" as a type')
+  it('Should validate email address', (done) => {
+    let validator = Validator.get('email');
+
+    expect(validator instanceof Validator.email).to.be(true);
+    done();
+  });
 });
