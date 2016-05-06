@@ -13,6 +13,8 @@ exports.types = {
   object: {}
 };
 
+// Missing: enum, date
+
 // Key-value pairs with email and expected validation status
 exports.emails = {
   'email@domain.com': true,
@@ -55,19 +57,47 @@ exports.fieldTypes = {
 };
 
 exports.testSchema = {
-  firstname: {
+  name: {
     type: String,
-    required: true,
-    pattern: /^[a-z]+$/i
-  },
-  lastname: {
-    type: String,
-    required: true,
-    pattern: /^[a-z\-]+$/i
+    required: true
   },
   email: {
-    type: String,
+    type: 'String',
     required: false,
     pattern: /^[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i
-  }
+  },
+  friends: ['string'],
+  address: {
+    street: {
+      type: String,
+      required: true,
+    },
+    postcode: {
+      type: String,
+      length: 5
+    },
+    city: {
+      type: String
+    }
+  },
+  age: 'integer',
+  distance: Number,
+  isValidated: Boolean
+};
+
+exports.testInput = {
+  name: 'Arttu Manninen',
+  email: 'arttu@kaktus.cc',
+  friends: [
+    'Alma',
+    'Edi'
+  ],
+  address: {
+    street: 'Example street',
+    postcode: '00100',
+    city: null
+  },
+  age: 36,
+  distance: 10.4,
+  isValidated: false
 };
