@@ -1,7 +1,7 @@
 export default class TypeValidator {
   static defaults = {};
 
-  constructor(opts = {}, defaults) {
+  constructor(opts = {}, defaults = {}) {
     this.options = Object.assign({}, defaults, opts);
   }
 
