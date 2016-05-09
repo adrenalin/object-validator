@@ -15,6 +15,26 @@ describe('Check schema validation', () => {
     done();
   });
 
+  it('Should see that there are children in a deep object', (done) => {
+    expect(Schema.hasChildren({
+      foo: {
+        bar: String
+      }
+    })).to.be(true);
+    done();
+  });
+
+  it('Should see that there are children in an even deep object', (done) => {
+    expect(Schema.hasChildren({
+      foo: {
+        bar: {
+          str: String
+        }
+      }
+    })).to.be(true);
+    done();
+  });
+
   it('Should see that there are no children in a typed object', (done) => {
     expect(Schema.hasChildren({
       foo: {
