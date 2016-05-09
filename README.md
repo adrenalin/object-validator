@@ -2,7 +2,22 @@
 
 Object validator for JSON input
 
-There are two main parts: Schema and Validator.
+## Data types
+
+There are currently five main data types with some additional shorthands for subtypes
+
+1. `Array`
+2. `Boolean`
+3. `Date`
+4. `Number`
+  - any valid number with additional subtypes `Integer` and `Float`
+5. `String`
+  - any valid string with additional subtype `Email`
+
+### Array
+
+An array can contain either any JS object or strictly validated set of objects.
+
 
 ## Schema
 
@@ -15,7 +30,7 @@ or by setting the schema
     let schema = new Schema();
     schema.setSchema(definitions);
 
-
+###
 
 ### Schema example:
 
