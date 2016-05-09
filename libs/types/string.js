@@ -9,6 +9,8 @@ export default class TypeString extends TypeValidator {
     pattern: null
   }
 
+  static fieldType = String;
+
   getPattern(pattern) {
     if (pattern instanceof RegExp) {
       return pattern;
@@ -58,7 +60,7 @@ export default class TypeString extends TypeValidator {
   }
 
   static matchType(t) {
-    if (t === 'str' || t === 'Str' || t === 'string' || t === 'String' || t === String) {
+    if (t === 'str' || t === 'Str' || t === 'string' || t === 'String' || t === TypeString.fieldType) {
       return true;
     }
 

@@ -9,6 +9,8 @@ export default class TypeNumber extends TypeValidator {
     strict: false
   }
 
+  static fieldType = Number
+
   constructor(opts) {
     super(opts, TypeNumber.defaults);
   }
@@ -43,7 +45,7 @@ export default class TypeNumber extends TypeValidator {
   }
 
   static matchType(t) {
-    if (t === 'number' || t === 'Number' || t === Number) {
+    if (t === 'number' || t === 'Number' || t === TypeNumber.fieldType) {
       return true;
     }
 
