@@ -1,4 +1,4 @@
-import Validator from '../libs/validator';
+import Validator from '../lib/validator';
 
 exports.types = {
   array: [],

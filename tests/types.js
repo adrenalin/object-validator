@@ -1,4 +1,4 @@
-import Validator from '../libs/validator';
+import Validator from '../lib/validator';
 
 import should from 'should';
 import expect from 'expect.js';

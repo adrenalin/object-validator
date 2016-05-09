@@ -1,5 +1,5 @@
-import Validator from '../../libs/validator';
-import Schema from '../../libs/schema';
+import Validator from '../../lib/validator';
+import Schema from '../../lib/schema';
 
 import { types, emails } from '../data';
 

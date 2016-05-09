@@ -1,9 +1,9 @@
-import Validator from '../../libs/validator';
-import Schema from '../../libs/schema';
-import TypeValidator from '../../libs/types/validator';
+import Validator from '../../lib/validator';
+import Schema from '../../lib/schema';
+import TypeValidator from '../../lib/types/validator';
 
 import { types, fieldTypes } from '../data';
-import { isObject } from '../../libs/primitives';
+import { isObject } from '../../lib/primitives';
 
 import should from 'should';
 import expect from 'expect.js';
