@@ -29,7 +29,7 @@
   "scripts": {
     "compile": "./node_modules/.bin/babel --presets es2015,stage-0 -d build/ libs/",
     "prepublish": "npm run compile",
-    "install": "npm run compile",
+    "postinstall": "npm run compile",
     "test": "NODE_ENV=test PROJECT_NAME=api mocha --compilers js:babel-core/register --timeout 10000 tests/**"
   },
   "engines": {
