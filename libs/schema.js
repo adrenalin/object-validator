@@ -1,5 +1,5 @@
 import Validator from './validator';
-import { isObject, isArray } from './primitives';
+import { isObject, isArray, isString } from './primitives';
 
 export default class Schema {
   constructor(structure = {}, path = []) {
@@ -11,10 +11,28 @@ export default class Schema {
   }
 
   static hasChildren(structure) {
+    let fieldType;
+
+    if (!isObject(structure) && !isArray(structure)) {
+      return false;
+    }
+
+    if (structure instanceof Schema) {
+      return true;
+    }
+
     // Check if the schema has children
     for (let k in structure) {
       if (isArray(structure[k])) {
         return true;
+      }
+
+      if (Schema.isSchema(structure[k])) {
+        return true;
+      }
+
+      if (!isObject(structure[k])) {
+        structure[k] = Schema.validateSchemaField(structure[k]);
       }
 
       if (isObject(structure[k])) {
@@ -22,14 +40,10 @@ export default class Schema {
           return true;
         }
 
-        if (this.hasChildren(structure[k])) {
-          structure.children = true;
-          structure.type = 'object';
-          return true;
-        }
+        let rwords = this.getReservedWords(structure[k].type);
 
         for (let i in structure[k]) {
-          if (i === 'type') {
+          if (rwords.indexOf(i) !== -1) {
             continue;
           }
 
@@ -40,9 +54,10 @@ export default class Schema {
             // Do nothing
           }
         }
+
+        continue;
       }
     }
-
     return false;
   }
 
@@ -52,7 +67,7 @@ export default class Schema {
 
   setSchema(structure) {
     this.validateSchema(structure);
-    this.structure = structure;
+    this.structure = structure || {};
   }
 
   static isSchema(val) {
@@ -71,14 +86,14 @@ export default class Schema {
     return Schema.isSchema(val);
   }
 
-  validate(input, errors = null) {
+  validate(input, errors = null, path = []) {
     this.errors = isObject(errors) ? errors : this.errors;
 
     if (!isObject(this.structure)) {
       throw new Error('No schema set');
     }
 
-    return this.validateObject(this.structure, input);
+    return this.validateObject(this.structure, input, path);
   }
 
   validateObject(obj, input, path = []) {
@@ -87,13 +102,41 @@ export default class Schema {
 
     for (let i in keys) {
       let key = keys[i];
-      let value = input[key] || undefined;
+      let value = input ? input[key] : undefined;
       let p = path.slice(0).concat(key);
+      let pathName = p.join('.');
+      let field = obj[key];
 
-      if (this.hasChildren(obj[key])) {
-        valid = this.validateObject(obj[key], value, p);
-      } else {
-        valid = this.validateField(obj[key], value, p);
+      switch (true) {
+        case (this.isSchema(field)):
+          if (!field.validate(value, this.errors, p)) {
+            valid = false;
+          }
+          break;
+
+        case (obj[key].type === 'array'):
+          // Validate array contents
+          if (!this.validateField(field, value, p)) {
+            valid = false;
+            break;
+          }
+
+          // Validate each object separately
+          if (!this.validateArray(field, value, p)) {
+            valid = false;
+          }
+          break;
+
+        case (this.hasChildren(obj[key])):
+          if (!this.validateObject(field, value, p)) {
+            valid = false;
+          }
+          break;
+
+        default:
+          if (!this.validateField(field, value, p)) {
+            valid = false;
+          }
       }
     }
 
@@ -104,12 +147,38 @@ export default class Schema {
     return !(value === null || value === undefined);
   }
 
+  validateArray(field, input, path) {
+    let pathName = path.join('.');
+    if (!isArray(input)) {
+      this.errors[pathName] = 'Not an array';
+      return false;
+    }
+
+    let valid = true;
+
+    // No validation required
+    if (!field.children) {
+      return true;
+    }
+
+    input.map((val, i) => {
+      let p = [].concat(path);
+      p.push(i);
+      if (!this.validateField(field.children, val, p)) {
+        valid = false;
+      }
+    });
+
+    return valid;
+  }
+
   validateField(field, value, path) {
+    let pathName = path.join('.');
+
     if (!this.isset(value) && !field.required) {
       return true;
     }
 
-    let pathName = path.join('.');
     let t = field.type;
 
     if (!t) {
@@ -133,10 +202,88 @@ export default class Schema {
     return true;
   }
 
+  validateSchemaField(field) {
+    return Schema.validateSchemaField(field);
+  }
+
+  static validateSchemaField(field) {
+    if (typeof field === 'function') {
+      let fieldType = Validator.getType(field);
+
+      if (!fieldType) {
+        throw new Error(`Field type for function could not be determined`);
+      }
+      field = {
+        type: fieldType
+      };
+    }
+
+    if (typeof field.type === 'function') {
+      let fieldType = Validator.getType(field.type);
+
+      if (!fieldType) {
+        throw new Error(`Field type for function could not be determined`);
+      }
+      field.type = fieldType;
+    }
+
+    if (isString(field)) {
+      let fieldType = Validator.getType(field);
+      if (field === fieldType) {
+        return field;
+      }
+
+      if (!fieldType) {
+        return field;
+      }
+
+      field = {
+        type: fieldType
+      }
+    }
+    return field;
+  }
+
+  /**
+   * Get reserved words for the given type
+   *
+   * @param mixed fieldType     String or constructor
+   * @return array              Reserved words for the given field
+   */
+  getReservedWords(fieldType) {
+    return Schema.getReservedWords(fieldType);
+  }
+
+  /**
+   * Get reserved words for the given type
+   *
+   * @param mixed fieldType     String or constructor
+   * @return array              Reserved words for the given field
+   */
+  static getReservedWords(fieldType) {
+    if (!isString(fieldType)) {
+      fieldType = Validator.getType(fieldType);
+    }
+
+    if (!fieldType) {
+      throw new Error('Unidentified field type, cannot get reserved words');
+    }
+
+    let defaults = ['type', 'required'];
+    try {
+      let fields = Object.keys(Validator[fieldType].defaults) || [];
+      return fields.concat(defaults);
+    } catch (err) {
+      return defaults;
+    }
+  }
+
   validateSchema(structure) {
     if (this.isSchema(structure)) {
       return true;
     }
+
+    let fieldType = null;
 
     if (!isObject(structure)) {
       throw new Error('Schema structure has to be a plain object or a schema');
@@ -146,20 +293,33 @@ export default class Schema {
       this.path = [];
     }
 
+    // First pass: convert types
     for (let k in structure) {
-      let fieldType = null;
+      structure[k] = this.validateSchemaField(structure[k]);
+    }
 
-      if (!structure.hasOwnProperty(k)) {
-        continue;
-      }
-
+    for (let k in structure) {
       // This schema has already been validated
       if (this.isSchema(structure[k])) {
         continue;
       }
 
+      let keywords = [];
+
+      if (fieldType = Validator.getType(structure[k].type)) {
+      }
+
+      if (fieldType) {
+        keywords = Schema.getReservedWords(fieldType);
+      }
+
+      if (!structure.hasOwnProperty(k)) {
+        continue;
+      }
+
       if (this.hasChildren(structure[k])) {
-        let p = this.path.slice(0).push(k);
+        let p = this.path.slice(0);
+        p.push(k);
         structure[k] = new Schema(structure[k], p);
         continue;
       }
@@ -168,6 +328,7 @@ export default class Schema {
         let children = structure[k][0] || null;
 
         if (children && !this.isSchema(children)) {
+          children = this.validateSchemaField(children);
           let tmp = new Schema({children: children});
           children = tmp.structure.children;
         }
@@ -176,22 +337,26 @@ export default class Schema {
           type: 'array',
           children: children
         };
+        continue;
       }
 
       if (!isObject(structure[k])) {
         structure[k] = {
           type: structure[k]
         };
+        continue;
+      }
+
+      if (this.isSchema(structure[k])) {
+        continue;
       }
 
       if (typeof structure[k].type === 'undefined') {
-        throw new Error(`Unexpected error: type is not determinable for the key "${k}"`);
+        structure[k] = new Schema(structure[k]);
       }
 
-      structure[k].type = Validator.getType(structure[k].type);
-
-      if (!structure[k].type) {
-        throw new Error(`Invalid schema type for key "${this.path.join('.')}${k}"`);
+      if (keywords.indexOf(k) !== -1) {
+        continue;
       }
     }
   }
