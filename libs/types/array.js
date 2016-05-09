@@ -9,6 +9,8 @@ export default class TypeArray extends TypeValidator {
     children: null
   }
 
+  static fieldType = Array;
+
   constructor(opts = {}) {
     super(opts, TypeArray.defaults);
   }
@@ -20,6 +22,14 @@ export default class TypeArray extends TypeValidator {
 
     if (this.options.length !== null && val.length !== this.options.length) {
       throw new Error(`Length is ${val.length}, accepted length ${this.options.length}`);
+    }
+
+    if (Number(this.options.minLength) > val.length) {
+      throw new Error(`Length is ${val.length}, required minimum length ${this.options.minLength}`);
+    }
+
+    if (Number(this.options.maxLength) < val.length) {
+      throw new Error(`Length is ${val.length}, required minimum length ${this.options.maxLength}`);
     }
 
     return true;
