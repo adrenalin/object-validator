@@ -27,7 +27,7 @@
     "should": "^8.3.1"
   },
   "scripts": {
-    "test": "NODE_ENV=test PROJECT_NAME=api mocha --compilers js:babel-core/register --timeout 10000 --reporter dot tests/**"
+    "test": "NODE_ENV=test PROJECT_NAME=api mocha --compilers js:babel-core/register --timeout 10000 tests/**"
   },
   "engines": {
     "node": "*"
