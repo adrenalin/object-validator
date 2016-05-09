@@ -30,6 +30,10 @@ exports.isNumeric = function isNumeric(val) {
     return false;
   }
 
+  if (val instanceof Date) {
+    return false;
+  }
+
   if (isNaN(val)) {
     return false;
   }
@@ -41,7 +45,29 @@ exports.isNumber = function isNumber(val, strict = true) {
     return true;
   }
 
+  if (val instanceof Date) {
+    return false;
+  }
+
   if (!strict && exports.isNumeric(val)) {
+    return true;
+  }
+
+  return false;
+};
+
+exports.isDate = function isDate(val) {
+  if (val instanceof Date) {
+    return true;
+  }
+
+  if (exports.isBoolean(val)) {
+    return false;
+  }
+
+  let date = new Date(val);
+
+  if (!isNaN(date.getTime())) {
     return true;
   }
 
@@ -60,7 +86,7 @@ exports.isObject = function isObject(val, strict = true) {
   if (!val) {
     return false;
   }
-  
+
   if (typeof val !== 'object') {
     return false;
   }

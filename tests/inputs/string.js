@@ -5,14 +5,14 @@ import { types } from '../data';
 import should from 'should';
 import expect from 'expect.js';
 
-describe('Check string validation', () => {
-  it('Should validate string', (done) => {
+describe('String validation', () => {
+  it('should validate string', (done) => {
     let validator = Validator.get('string');
     expect(validator instanceof Validator.string).to.be(true);
     expect(validator.validate(types.string)).to.be(true);
 
     for (let i in types) {
-      if (i === 'string' || i === 'numberAsString') {
+      if (i.match(/string/i)) {
         continue;
       }
 
@@ -24,7 +24,7 @@ describe('Check string validation', () => {
     done();
   });
 
-  it('Should respect explicit length', (done) => {
+  it('should respect explicit length', (done) => {
     let validator = Validator.get('string', {
       length: 5
     });
@@ -39,7 +39,7 @@ describe('Check string validation', () => {
     done();
   });
 
-  it('Should respect min and max lengths', (done) => {
+  it('should respect min and max lengths', (done) => {
     let validator = Validator.get('string', {
       minLength: 1,
       maxLength: 3
@@ -58,7 +58,7 @@ describe('Check string validation', () => {
     done();
   });
 
-  it('Should use string for pattern matching', (done) => {
+  it('should use string for pattern matching', (done) => {
     let validator = Validator.get('string', {
       pattern: '^foo$'
     });
@@ -76,7 +76,7 @@ describe('Check string validation', () => {
     done();
   });
 
-  it('Should use function for pattern matching', (done) => {
+  it('should use function for pattern matching', (done) => {
     let validator = Validator.get('string', {
       pattern: function(val) {
         if (val === 'foo') {

@@ -1,5 +1,5 @@
 import TypeValidator from './validator';
-import { isNumber } from '../primitives';
+import { isNumber, isDate } from '../primitives';
 
 export default class TypeNumber extends TypeValidator {
   static defaults = {
@@ -18,6 +18,10 @@ export default class TypeNumber extends TypeValidator {
   validate(val) {
     if (!isNumber(val, this.options.strict)) {
       throw new Error('Not numeric');
+    }
+
+    if (val instanceof Date) {
+      throw new Error('Value is a date');
     }
 
     if (this.options.precision !== null) {

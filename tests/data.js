@@ -10,6 +10,9 @@ exports.types = {
   boolean: true,
   classObject: Validator,
   classInitialized: new Validator(),
+  date: new Date(),
+  dateAsString: '2016-05-09',
+  dateWithTimeAsString: '2016-05-09T14:02:00.00',
   object: {}
 };
 

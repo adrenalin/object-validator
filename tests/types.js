@@ -61,4 +61,12 @@ describe('Check type resolving', () => {
     expect(validator.getType('objEct')).not.to.be('object');
     done();
   });
+
+  it('Should return date when requesting date', (done) => {
+    expect(validator.getType('date')).to.be('date');
+    expect(validator.getType('Date')).to.be('date');
+    expect(validator.getType(Date)).to.be('date');
+    expect(validator.getType('dAte')).not.to.be('date');
+    done();
+  });
 });

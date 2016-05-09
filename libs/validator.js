@@ -4,6 +4,7 @@ import primitives from './primitives';
 
 import TypeArray from './types/array';
 import TypeBoolean from './types/boolean';
+import TypeDate from './types/date';
 import TypeEmail from './types/email';
 import TypeInteger from './types/integer';
 import TypeNumber from './types/number';
@@ -15,6 +16,7 @@ import Schema from './schema';
 export default class Validator {
   static array = TypeArray;
   static boolean = TypeBoolean;
+  static date = TypeDate;
   static email = TypeEmail;
   static number = TypeNumber;
   static integer = TypeInteger;
