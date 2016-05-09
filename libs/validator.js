@@ -93,6 +93,10 @@ export default class Validator {
       }
     }
 
+    if (Schema.isSchema(t)) {
+      return 'schema';
+    }
+
     return null;
   }
 }
