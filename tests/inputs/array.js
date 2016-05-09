@@ -43,4 +43,29 @@ describe('Check array validation', () => {
 
     done();
   });
+
+  it('should respect minimum length', (done) => {
+    let validator = Validator.get('array', {
+      minLength: 1
+    });
+    expect(validator.validate(['foo'])).to.be(true);
+    should(() => {
+      validator.validate([])
+    })
+    .throw(Error);
+    done();
+  });
+
+  it('should respect maximum length', (done) => {
+    let validator = Validator.get('array', {
+      maxLength: 1
+    });
+    expect(validator.validate([])).to.be(true);
+    expect(validator.validate(['foo'])).to.be(true);
+    should(() => {
+      validator.validate(['foo', 'bar'])
+    })
+    .throw(Error);
+    done();
+  });
 });
