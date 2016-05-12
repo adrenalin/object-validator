@@ -166,4 +166,46 @@ describe('Check schema validation', () => {
     expect(schema.validate({})).to.be(true);
     done();
   });
+
+  it('should deny using foreign keys', (done) => {
+    let schema = new Schema({
+      foo: String
+    });
+    expect(schema.validate({
+      bar: 'foo'
+    })).to.be(false);
+    done();
+  });
+
+  it('should allow using foreign keys when explicitly allowed', (done) => {
+    let schema = new Schema({
+      foo: String
+    });
+    schema.allowForeign = true;
+
+    expect(schema.validate({
+      bar: 'foo'
+    })).to.be(true);
+    done();
+  });
+
+  it('should allow using foreign keys when explicitly allowed in the child schemas', (done) => {
+    let schema = new Schema({
+      p1: {
+        p2: {
+          bar: String
+        }
+      }
+    });
+    schema.allowForeign = true;
+
+    expect(schema.validate({
+      p1: {
+        p2: {
+          foo: 'foobar'
+        }
+      }
+    })).to.be(true);
+    done();
+  });
 });
