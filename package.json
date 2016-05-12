@@ -2,7 +2,7 @@
   "author": "Arttu Manninen",
   "name": "object-validator",
   "description": "Validate a JS object",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "url": ""
   },
