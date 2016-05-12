@@ -158,4 +158,12 @@ describe('Check schema validation', () => {
 
     done();
   });
+
+  it('should accept an empty array', (done) => {
+    let schema = new Schema({
+      arr: []
+    });
+    expect(schema.validate({})).to.be(true);
+    done();
+  });
 });
