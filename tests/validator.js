@@ -10,7 +10,7 @@ import expect from 'expect.js';
 describe('Check schema validation', () => {
   let schema = new Schema(testSchema);
 
-  it('Should accept uninitialized schema in the constructor', (done) => {
+  it('should accept uninitialized schema in the constructor', (done) => {
     should(() => {
       let validator = new Validator(testSchema);
     })
@@ -18,7 +18,7 @@ describe('Check schema validation', () => {
     done();
   });
 
-  it('Should accept initialized schema in the constructor', (done) => {
+  it('should accept initialized schema in the constructor', (done) => {
     should(() => {
       let validator = new Validator(schema);
 
@@ -30,7 +30,7 @@ describe('Check schema validation', () => {
     done();
   });
 
-  it('Should accept uninitialized schema in the setSchema method', (done) => {
+  it('should accept uninitialized schema in the setSchema method', (done) => {
     should(() => {
       let validator = new Validator();
       validator.setSchema(testSchema);
@@ -39,7 +39,7 @@ describe('Check schema validation', () => {
     done();
   });
 
-  it('Should accept initialized schema in the setSchema method', (done) => {
+  it('should accept initialized schema in the setSchema method', (done) => {
     should(() => {
       let validator = new Validator();
       validator.setSchema(schema);
@@ -52,9 +52,17 @@ describe('Check schema validation', () => {
     done();
   });
 
-  // it('Should validate input in the default schema', (done) => {
-  //   let validator = new Validator(schema);
-  //   validator.validate(testInput);
-  //   done();
-  // });
+  it('should pass the "allowForeign" from validator to schema', (done) => {
+    let s = new Schema({
+      foo: String
+    })
+    let validator = new Validator();
+    validator.setSchema(s);
+    validator.allowForeign = true;
+    expect(validator.validate({
+      bar: 'foobar'
+    })).to.be(true);
+    expect(validator.schema.allowForeign).to.be(true);
+    done();
+  });
 });
