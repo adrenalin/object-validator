@@ -9,10 +9,11 @@ import should from 'should';
 import expect from 'expect.js';
 
 describe('Reserved words', () => {
-  it('should give "type" and "required" for "boolean"', (done) => {
+  let defaultReserved = TypeValidator.RESERVED_WORDS;
+
+  it('should give only the TypeValidator reserved words for "boolean"', (done) => {
     let s1 = Schema.getReservedWords('boolean');
-    expect(s1.length).to.be(2);
-    expect(s1[0]).to.be('type');
+    expect(s1.length).to.be(defaultReserved.length);
     done();
   });
 
